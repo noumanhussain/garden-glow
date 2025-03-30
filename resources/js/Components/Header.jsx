@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 
 export default function Header() {
+    const { auth } = usePage().props;
     const [activeDropdown, setActiveDropdown] = useState(null);
 
     const handleMouseEnter = (menu) => {
@@ -10,6 +11,11 @@ export default function Header() {
 
     const handleMouseLeave = () => {
         setActiveDropdown(null);
+    };
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        router.post("/logout");
     };
 
     const menuItems = {
@@ -272,14 +278,36 @@ export default function Header() {
                         </Link>
                     </div>
 
-                    {/* Sign In Button - Right */}
+                    {/* Auth Buttons - Right */}
                     <div>
-                        <Link
-                            href="/login"
-                            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors duration-200 ease-in-out whitespace-nowrap"
-                        >
-                            Sign in
-                        </Link>
+                        {auth?.user ? (
+                            <div className="flex items-center space-x-4">
+                                <span className="text-gray-700">
+                                    {auth.user.name}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors duration-200 ease-in-out whitespace-nowrap"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-4">
+                                <Link
+                                    href="/login"
+                                    className="text-gray-700 hover:text-green-600 text-xs font-medium"
+                                >
+                                    Sign In
+                                </Link>
+                                <Link
+                                    href="/register"
+                                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors duration-200 ease-in-out whitespace-nowrap"
+                                >
+                                    Register
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </nav>
