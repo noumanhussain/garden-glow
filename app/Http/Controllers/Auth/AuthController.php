@@ -28,9 +28,15 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            return redirect()->route('dashboard')->with([
+                'auth' => [
+                    'user' => Auth::user(),
+                    'isLoggedIn' => true,
+                ]
+            ]);
         }
 
         return back()->withErrors([
@@ -54,13 +60,17 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect()->route('dashboard')->with([
+            'auth' => [
+                'user' => $user,
+                'isLoggedIn' => true,
+            ]
+        ]);
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

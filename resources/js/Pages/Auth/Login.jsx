@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import React from "react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 
 export default function Login() {
@@ -11,7 +11,7 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("login"));
+        post("/login");
     };
 
     return (
@@ -103,12 +103,12 @@ export default function Login() {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <a
-                            href={route("register")}
+                        <Link
+                            href="/register"
                             className="text-sm text-green-600 hover:text-green-800"
                         >
                             Don't have an account? Register
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

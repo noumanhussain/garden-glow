@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia; // We are going to use this class to render React components
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 // Public routes
 Route::get('/', function () {
@@ -19,6 +20,15 @@ Route::middleware('guest')->group(function () {
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard', [
+            'auth' => [
+                'user' => Auth::user(),
+                'isLoggedIn' => Auth::check(),
+            ]
+        ]);
+    })->name('dashboard');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     // Add other protected routes here
 });

@@ -1,8 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
 
 export default function Header() {
-    const { auth } = usePage().props;
+    const { props } = usePage();
+    const [authState, setAuthState] = useState(
+        props.auth || { user: null, isLoggedIn: false }
+    );
+
+    useEffect(() => {
+        if (props.auth) {
+            setAuthState(props.auth);
+            console.log("Auth state updated:", props.auth);
+        }
+    }, [props.auth]);
+
     const [activeDropdown, setActiveDropdown] = useState(null);
 
     const handleMouseEnter = (menu) => {
@@ -16,6 +27,16 @@ export default function Header() {
     const handleLogout = (e) => {
         e.preventDefault();
         router.post("/logout");
+    };
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        router.get("/login");
+    };
+
+    const handleRegister = (e) => {
+        e.preventDefault();
+        router.get("/register");
     };
 
     const menuItems = {
@@ -59,9 +80,9 @@ export default function Header() {
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center">
                             <img
-                                src="/images/logo.png"
+                                src="/images/logo.svg"
                                 alt="Garden Glow"
-                                className="h-12 w-auto"
+                                className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-200"
                             />
                         </Link>
                     </div>
@@ -278,16 +299,16 @@ export default function Header() {
                         </Link>
                     </div>
 
-                    {/* Auth Buttons - Right */}
-                    <div>
-                        {auth?.user ? (
+                    {/* Auth Links - Right */}
+                    <div className="flex items-center space-x-4">
+                        {authState.isLoggedIn ? (
                             <div className="flex items-center space-x-4">
-                                <span className="text-gray-700">
-                                    {auth.user.name}
+                                <span className="text-sm text-gray-700">
+                                    Welcome, {authState.user?.name || "User"}
                                 </span>
                                 <button
                                     onClick={handleLogout}
-                                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors duration-200 ease-in-out whitespace-nowrap"
+                                    className="text-sm text-gray-700 hover:text-green-600"
                                 >
                                     Sign Out
                                 </button>
@@ -296,13 +317,13 @@ export default function Header() {
                             <div className="flex items-center space-x-4">
                                 <Link
                                     href="/login"
-                                    className="text-gray-700 hover:text-green-600 text-xs font-medium"
+                                    className="text-sm text-gray-700 hover:text-green-600"
                                 >
                                     Sign In
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-xs font-medium transition-colors duration-200 ease-in-out whitespace-nowrap"
+                                    className="text-sm text-gray-700 hover:text-green-600"
                                 >
                                     Register
                                 </Link>

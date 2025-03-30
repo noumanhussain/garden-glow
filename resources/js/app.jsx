@@ -6,12 +6,11 @@ import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 
 createInertiaApp({
-    title: (title) => `${title} - My App`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.jsx`,
-            import.meta.glob("./Pages/**/*.jsx")
-        ),
+    title: (title) => `${title} - Garden Glow`,
+    resolve: (name) => {
+        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
+        return pages[`./Pages/${name}.jsx`];
+    },
     setup({ el, App, props }) {
         const root = createRoot(el);
         root.render(
@@ -19,5 +18,8 @@ createInertiaApp({
                 <App {...props} />
             </React.StrictMode>
         );
+    },
+    progress: {
+        color: "#16a34a",
     },
 });
