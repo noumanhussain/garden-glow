@@ -18,6 +18,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+Route::get('/test', function () {
+    return Inertia::render('Test');
+});
+
+
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
