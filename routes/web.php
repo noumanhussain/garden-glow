@@ -20,6 +20,7 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/test', function () {
     return Inertia::render('Test');
+    
 });
 
 
